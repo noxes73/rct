@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import Child from "./Child";
+import { Context } from "./context";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    contextStore: {
+      theme: "light",
+      onThemeChange: () => this.onThemeChange(),
+      lightTheme: {
+        buttonColor: "secondary",
+        textColor: "black",
+        bgColor: "white",
+      },
+      darkTheme: {
+        buttonColor: "inverted",
+        textColor: "white",
+        bgColor: "black",
+      },
+      presentTheme: {
+        buttonColor: "secondary",
+        textColor: "black",
+        bgColor: "white",
+      },
+    },
+  };
+
+  onThemeChange = () => {
+    this.setState((prevState) => {
+      if (prevState.contextStore.theme === "white") {
+        prevState.contextStore.theme = "dark";
+        prevState.contextStore.presentTheme = prevState.contextStore.darkTheme;
+      } else {
+        prevState.contextStore.theme = "white";
+        prevState.contextStore.presentTheme = prevState.contextStore.lightTheme;
+      }
+      return prevState;
+    });
+  };
+  render() {
+    return (
+      <div>
+        <Context.Provider value={this.state.contextStore}>
+          <Child></Child>
+        </Context.Provider>
+      </div>
+    );
+  }
 }
 
 export default App;
